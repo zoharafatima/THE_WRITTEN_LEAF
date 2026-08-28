@@ -34,3 +34,4 @@ if (bookForm) bookForm.addEventListener('submit', (event) => {
 	const status = document.querySelector('.form-status');
 	if (status) status.textContent = 'This prototype keeps your entry on the page for now.';
 });
+

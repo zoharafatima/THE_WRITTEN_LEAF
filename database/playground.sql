@@ -1,0 +1,11 @@
+--  select *from users;
+-- select username,display_name,email from users;
+ -- select *from book_entries where author='george orwell';
+ -- select *from book_entries where END_date=null;
+ -- select *from book_entries where visibility='private';
+ -- select *from book_entries where available_for_lending=true;
+ -- select *from book_entries where End_date>'2026-02-01';
+ -- select *from book_entries order by title asc;
+ -- insert into users(username,display_name,email,password_hash,bio)
+--  values('leo_reads','leo','leo12@gamil.com','leao_hash','Books, coffee and rainy afternoons.');
+ 

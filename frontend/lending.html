@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Lend and discover books through The Written Leaf community.">
+    <title>Lending | The Written Leaf</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="progress-bar"></div>
+    <div id="app-navigation"></div>
+    <main>
+        <section class="lending-heading section-wrap">
+            <p class="eyebrow"><span></span> The lending shelf</p>
+            <h1>Share a book,<br><em>when you're ready.</em></h1>
+            <p class="page-intro">Choose which public books you are open to lending, and keep track of requests in one place.</p>
+        </section>
+        <section class="lending-content section-wrap">
+            <section class="lending-section" aria-labelledby="availability-heading">
+                <div class="lending-section-heading">
+                    <div>
+                            <p class="eyebrow"><span></span> Your books</p>
+                            <h2 id="availability-heading">Lending availability</h2>
+                    </div>
+                    <a class="profile-add-link" href="add-book.html">Add a book <span aria-hidden="true">+</span></a>
+                </div>
+                <p class="lending-guidance">Only public books can be offered to other readers. You can change availability at any time.</p>
+                <div class="owned-lending-books" id="owned-lending-books" aria-live="polite" aria-busy="true">
+                    <p class="lending-status">Loading your books...</p>
+                </div>
+            </section>
+
+            <section class="lending-section lending-requests-section" aria-labelledby="requests-heading">
+                <div class="lending-section-heading">
+                    <div>
+                            <p class="eyebrow"><span></span> Community requests</p>
+                            <h2 id="requests-heading">Borrow requests</h2>
+                    </div>
+                    <a class="lending-discover-link" href="discover.html">Discover books <span aria-hidden="true">&rarr;</span></a>
+                </div>
+                <div class="lending-request-groups">
+                    <section aria-labelledby="incoming-heading">
+                            <div class="lending-subheading">
+                                <h3 id="incoming-heading">Requests for your books</h3>
+                                <span class="profile-count" id="incoming-count">—</span>
+                            </div>
+                            <div class="lending-request-list" id="incoming-requests" aria-live="polite" aria-busy="true">
+                                <p class="lending-status">Loading requests...</p>
+                            </div>
+                    </section>
+                    <section aria-labelledby="outgoing-heading">
+                            <div class="lending-subheading">
+                                <h3 id="outgoing-heading">Your requests</h3>
+                                <span class="profile-count" id="outgoing-count">—</span>
+                            </div>
+                            <div class="lending-request-list" id="outgoing-requests" aria-live="polite" aria-busy="true">
+                                <p class="lending-status">Loading requests...</p>
+                            </div>
+                    </section>
+                </div>
+            </section>
+        </section>
+    </main>
+    <footer class="site-footer section-wrap">
+        <a class="brand" href="journey.html"><span class="brand-mark">&#10022;</span>The Written Leaf</a>
+        <p>A place for the books that stay.</p><span class="footer-meta">&copy; 2024 / Made for readers</span>
+    </footer>
+    <script src="js/api.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

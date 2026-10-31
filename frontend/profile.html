@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Your reader profile on The Written Leaf.">
+    <title>Profile | The Written Leaf</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="progress-bar"></div>
+    <div id="app-navigation"></div>
+    <main>
+        <section class="profile-library section-wrap">
+            <div class="profile-library-head">
+                <div>
+                    <p class="eyebrow"><span></span> Your reading journey</p>
+                    <h1 id="profile-heading">My Library</h1>
+                    <p class="profile-intro">The books you have kept along the way.</p>
+                </div>
+                <div class="profile-account-actions">
+                    <div class="profile-mark" aria-hidden="true">R</div>
+                    <div>
+                        <p class="profile-account-summary" id="profile-account-summary"></p>
+                        <button class="profile-edit-account" id="profile-edit-account" type="button" aria-haspopup="dialog">Edit profile</button>
+                    </div>
+                </div>
+            </div>
+
+            <section class="profile-shelf" aria-labelledby="bookshelf-heading">
+                <div class="profile-section-heading">
+                    <div>
+                        <p class="eyebrow"><span></span> Collected over time</p>
+                        <h2 id="bookshelf-heading">Your bookshelf</h2>
+                    </div>
+                    <div class="profile-shelf-actions">
+                        <span class="profile-count" id="library-count">—</span>
+                        <a class="profile-add-link" href="add-book.html">Add a book <span aria-hidden="true">+</span></a>
+                    </div>
+                </div>
+                <div class="profile-book-grid" id="profile-books" aria-live="polite" aria-busy="true" tabindex="-1">
+                    <p class="profile-status">Loading your books...</p>
+                </div>
+            </section>
+        </section>
+        <dialog class="profile-account-dialog" id="profile-account-dialog" aria-labelledby="profile-account-heading">
+            <button class="profile-dialog-close" type="button" data-account-close aria-label="Close profile editor">&times;</button>
+            <form class="profile-account-form" id="profile-account-form">
+                <p class="eyebrow"><span></span> Your account</p>
+                <h2 id="profile-account-heading">Edit your <em>profile.</em></h2>
+                <p class="profile-edit-intro">Update the details associated with your account.</p>
+                <label for="profile-display-name">Display name</label>
+                <input id="profile-display-name" name="display_name" type="text" maxlength="100" required>
+                <label for="profile-username">Username</label>
+                <input id="profile-username" name="username" type="text" minlength="3" maxlength="30" pattern="[A-Za-z0-9_]{3,30}" required>
+                <label for="profile-bio">Bio</label>
+                <textarea id="profile-bio" name="bio" rows="4"></textarea>
+                <p class="profile-edit-message" id="profile-account-message" role="status" aria-live="polite"></p>
+                <div class="profile-edit-actions">
+                    <button class="button button-primary" type="submit">Save profile</button>
+                    <button class="button button-quiet" type="button" data-account-cancel>Cancel</button>
+                </div>
+            </form>
+        </dialog>
+        <dialog class="profile-edit-dialog" id="profile-edit-dialog" aria-labelledby="profile-edit-heading">
+            <button class="profile-dialog-close" type="button" data-profile-close aria-label="Close book editor">&times;</button>
+            <form class="profile-edit-form" id="profile-edit-form">
+                <p class="eyebrow"><span></span> Your reading notes</p>
+                <h2 id="profile-edit-heading">Update this <em>entry.</em></h2>
+                <p class="profile-edit-intro">Adjust the details you want to keep about this book.</p>
+                <label for="profile-edit-title">Book title</label>
+                <input id="profile-edit-title" name="title" type="text" maxlength="255" required>
+                <label for="profile-edit-author">Author</label>
+                <input id="profile-edit-author" name="author" type="text" maxlength="255" required>
+                <label for="profile-edit-cover">Front cover image URL</label>
+                <input id="profile-edit-cover" name="front_cover" type="text" inputmode="url">
+                <div class="profile-edit-dates">
+                    <div>
+                        <label for="profile-edit-start">Started</label>
+                        <input id="profile-edit-start" name="start_date" type="date">
+                    </div>
+                    <div>
+                        <label for="profile-edit-end">Finished</label>
+                        <input id="profile-edit-end" name="end_date" type="date">
+                    </div>
+                </div>
+                <label for="profile-edit-visibility">Visibility</label>
+                <select id="profile-edit-visibility" name="visibility">
+                    <option value="private">Private</option>
+                    <option value="public">Public</option>
+                </select>
+                <label for="profile-edit-reflection">Reflection</label>
+                <textarea id="profile-edit-reflection" name="reflection" rows="5"></textarea>
+                <label class="profile-edit-lending" for="profile-edit-lending">
+                    <input id="profile-edit-lending" name="available_for_lending" type="checkbox">
+                    Available for lending
+                </label>
+                <p class="profile-edit-message" id="profile-edit-message" role="status" aria-live="polite"></p>
+                <div class="profile-edit-actions">
+                    <button class="button button-primary" type="submit">Save changes</button>
+                    <button class="button button-quiet" type="button" data-profile-cancel>Cancel</button>
+                </div>
+            </form>
+        </dialog>
+    </main>
+    <footer class="site-footer section-wrap">
+        <a class="brand" href="journey.html"><span class="brand-mark">&#10022;</span>The Written Leaf</a>
+        <p>A place for the books that stay.</p><span class="footer-meta">&copy; 2024 / Made for readers</span>
+    </footer>
+    <script src="js/api.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

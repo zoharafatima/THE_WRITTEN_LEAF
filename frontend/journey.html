@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Your reading journey on The Written Leaf.">
+    <title>My Journey | The Written Leaf</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="progress-bar"></div>
+    <div id="app-navigation"></div>
+    <main class="journey-main">
+        <section class="journey-welcome section-wrap">
+            <div>
+                <p class="eyebrow"><span></span> My reading space</p>
+                <h1>Your bookshelf,<br><em id="user-greeting">Reader</em>.</h1>
+                <p class="page-intro">A little home for the books and thoughts you want to keep.</p>
+            </div>
+            <a class="button button-primary journey-add-button" href="add-book.html">Add a book <span>&#8599;</span></a>
+        </section>
+
+        <section class="journey-content section-wrap" aria-labelledby="bookshelf-title">
+            <div class="journey-library-heading">
+                <div>
+                    <p class="eyebrow"><span></span> Your collection</p>
+                    <h2 id="bookshelf-title">Books to <em>return to.</em></h2>
+                </div>
+                <p class="journey-book-count" id="journey-book-count" aria-live="polite"></p>
+            </div>
+
+            <div class="journey-filters" role="group" aria-label="Filter books by visibility">
+                <button class="journey-filter is-active" type="button" data-visibility-filter="all" aria-pressed="true">All books</button>
+                <button class="journey-filter" type="button" data-visibility-filter="public" aria-pressed="false">Public</button>
+                <button class="journey-filter" type="button" data-visibility-filter="private" aria-pressed="false">Private</button>
+            </div>
+            <label class="journey-search" for="journey-search">
+                <span aria-hidden="true">&#9906;</span>
+                <input id="journey-search" type="search" placeholder="Search title or author" autocomplete="off">
+            </label>
+
+            <p class="journey-message" id="journey-message" role="status" aria-live="polite">Gathering your books...</p>
+            <div class="book-shelf" id="book-shelf" aria-live="polite"></div>
+
+            <div class="journey-empty" id="journey-empty" hidden>
+                <span class="journey-empty-leaf" aria-hidden="true">&#10047;</span>
+                <h3 id="journey-empty-title">Your bookshelf is waiting.</h3>
+                <p id="journey-empty-copy">Add the first book you would like to remember.</p>
+                <a class="button button-primary" href="add-book.html">Add a book <span>&#8599;</span></a>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer section-wrap">
+        <a class="brand" href="journey.html"><span class="brand-mark">&#10022;</span>The Written Leaf</a>
+        <p>A place for the books that stay.</p><span class="footer-meta">&copy; 2024 / Made for readers</span>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

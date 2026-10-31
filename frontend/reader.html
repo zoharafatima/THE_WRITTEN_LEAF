@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A public reader profile from The Written Leaf community.">
+    <title>Reader | The Written Leaf</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="progress-bar"></div>
+    <div id="app-navigation"></div>
+    <main>
+        <section class="reader-profile section-wrap">
+            <a class="reader-profile-back" href="discover.html">&larr; Back to Discover</a>
+            <p class="reader-profile-status" id="reader-profile-status" role="status" aria-live="polite">Opening this reader's page...</p>
+            <article class="reader-profile-card" id="reader-profile" hidden>
+                <p class="eyebrow"><span></span> A reader in our community</p>
+                <div class="reader-profile-mark" aria-hidden="true">&#10047;</div>
+                <h1 id="reader-profile-name"></h1>
+                <p class="reader-profile-username" id="reader-profile-username"></p>
+                <p class="reader-profile-bio" id="reader-profile-bio"></p>
+                <p class="reader-profile-count" id="reader-profile-count"></p>
+                <a class="button button-primary" href="discover.html">Explore the shared shelf <span aria-hidden="true">&rarr;</span></a>
+            </article>
+        </section>
+    </main>
+    <footer class="site-footer section-wrap">
+        <a class="brand" href="journey.html"><span class="brand-mark">&#10022;</span>The Written Leaf</a>
+        <p>A place for the books that stay.</p><span class="footer-meta">&copy; 2024 / Made for readers</span>
+    </footer>
+    <script src="js/api.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -95,6 +95,10 @@ The initial development is focused on:
 
 Additional technologies may be introduced as the application develops, particularly for backend functionality, authentication, deployment, and cloud storage.
 
+The current application is served by the Flask app in `app.py` and uses the existing MySQL `book_entries` schema. The authenticated reading pages share a responsive sidebar; My Journey lists only the signed-in reader's entries and supports private/public filtering and search. Reading status is not stored by the current schema, so it is intentionally not shown as book data.
+
+Cover images are optional JPEG, PNG, GIF, or WebP uploads up to 5 MB each. The image files are stored under Flask's local `instance/covers` directory, while their paths use the existing `front_cover` and `back_cover` database fields; no schema migration is required. Persist this directory across deployments and include it in backups. Uploaded covers are served through an authenticated route that checks book visibility and ownership. No online cover search is currently configured.
+
 ---
 
 ## 🚧 Current Status

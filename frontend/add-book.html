@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Add a book to your Written Leaf reading journey.">
+    <title>Add a Book | The Written Leaf</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="progress-bar"></div>
+    <div id="app-navigation"></div>
+    <main>
+        <section class="page-hero section-wrap reveal">
+            <p class="eyebrow"><span></span> Add to your journey</p>
+            <h1>Give a book<br><em>a place to stay.</em></h1>
+            <p class="page-intro">Record the details, dates, and small impressions that make a reading experience yours.
+            </p>
+        </section>
+        <section class="page-content section-wrap">
+            <form class="book-form reveal">
+                <div class="field field-full">
+                    <label for="title">Book title</label>
+                    <input id="title" name="title" type="text" maxlength="255" placeholder="The book's title" required>
+                </div>
+                <div class="field field-full">
+                    <label for="author">Author</label>
+                    <input id="author" name="author" type="text" maxlength="255" placeholder="Author name" required>
+                </div>
+                <div class="field">
+                    <label for="start-date">Reading start date</label>
+                    <input id="start-date" name="start_date" type="date">
+                </div>
+                <div class="field">
+                    <label for="end-date">Reading end date</label>
+                    <input id="end-date" name="end_date" type="date">
+                </div>
+                <p class="derived-reading-status" role="status" aria-live="polite">
+                    Reading status <strong id="reading-status-preview">Currently Reading</strong>
+                </p>
+                <div class="field field-full">
+                    <label for="reflection">What did it leave with you?</label>
+                    <textarea id="reflection" name="reflection" rows="5" placeholder="A thought to return to..."></textarea>
+                </div>
+                <div class="field">
+                    <label for="visibility">Visibility</label>
+                    <select id="visibility" name="visibility">
+                        <option value="private">Private</option>
+                        <option value="public">Public</option>
+                    </select>
+                </div>
+                <label class="book-lending-option" for="available-for-lending">
+                    <input id="available-for-lending" name="available_for_lending" type="checkbox">
+                    <span>Available for lending</span>
+                    <small>Only public books can be offered to other readers.</small>
+                </label>
+                <fieldset class="cover-picker-group field-full">
+                    <legend>Book covers <span>Optional</span></legend>
+                    <p class="cover-picker-hint">Add your own photos, or leave these blank and add them later.</p>
+                    <div class="cover-picker-grid">
+                        <div class="cover-picker" data-cover-picker data-cover-key="front_cover">
+                            <strong>Front cover</strong>
+                            <div class="cover-picker-preview">
+                                <img alt="Front cover preview" hidden>
+                                <span>No front cover selected</span>
+                            </div>
+                            <label class="cover-file-button">Choose image
+                                <input class="cover-picker-input visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                            </label>
+                            <button class="cover-remove-button" type="button" disabled>Remove image</button>
+                            <p class="cover-picker-message" role="status" aria-live="polite"></p>
+                        </div>
+                        <div class="cover-picker" data-cover-picker data-cover-key="back_cover">
+                            <strong>Back cover</strong>
+                            <div class="cover-picker-preview">
+                                <img alt="Back cover preview" hidden>
+                                <span>No back cover selected</span>
+                            </div>
+                            <label class="cover-file-button">Choose image
+                                <input class="cover-picker-input visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                            </label>
+                            <button class="cover-remove-button" type="button" disabled>Remove image</button>
+                            <p class="cover-picker-message" role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                    <p class="cover-picker-hint">JPEG, PNG, GIF or WebP · up to 5 MB per image</p>
+                </fieldset>
+                <div class="field-full book-form-actions">
+                    <button class="button button-primary" type="submit">Keep this entry <span>&#8599;</span></button>
+                    <p class="form-status" role="status" aria-live="polite"></p>
+                    <a class="button button-quiet" id="created-entry-link" hidden></a>
+                </div>
+            </form>
+        </section>
+    </main>
+    <footer class="site-footer section-wrap">
+        <a class="brand" href="journey.html"><span class="brand-mark">&#10022;</span>The Written Leaf</a>
+        <p>A place for the books that stay.</p><span class="footer-meta">&copy; 2024 / Made for readers</span>
+    </footer>
+    <script src="js/api.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

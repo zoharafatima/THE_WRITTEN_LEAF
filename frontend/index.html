@@ -12,12 +12,17 @@
 
 <body>
     <div class="progress-bar"></div>
-    <header class="site-header"><a class="brand" href="index.html" aria-label="The Written Leaf home"><span
-                class="brand-mark">&#10022;</span>The Written Leaf</a><button class="menu-toggle" aria-expanded="false"
-            aria-controls="site-nav">Menu</button>
-        <nav class="site-nav" id="site-nav" aria-label="Main navigation"><a href="journey.html">Journey</a><a
-                href="add-book.html">Add a book</a><a href="discover.html">Discover</a><a
-                href="profile.html">Profile</a><a href="login.html">Sign in</a><a class="nav-link-arrow" href="lending.html">Lending &#8599;</a></nav>
+    <div id="app-navigation"></div>
+    <header class="site-header">
+        <a class="brand" href="index.html" aria-label="The Written Leaf home">
+            <span class="brand-mark">&#10022;</span>The Written Leaf
+        </a>
+        <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
+        <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+            <a href="index.html" aria-current="page">Home</a>
+            <a href="login.html">Sign in</a>
+            <a href="signup.html">Create account</a>
+        </nav>
     </header>
     <main>
         <section class="hero section-wrap">
@@ -26,9 +31,10 @@
                 <h1>Books leave traces.<br><em>Keep yours.</em></h1>
                 <p class="hero-intro">The Written Leaf is a considered place to record the books that move through your
                     life, and the person you become while reading them.</p>
-                <div class="hero-actions"><a class="button button-primary" href="signup.html">Begin your journey
-                        <span>&#8599;</span></a><a class="button button-quiet" href="discover.html">Explore readers
-                        <span>&#8594;</span></a></div>
+                <div class="hero-actions">
+                    <a class="button button-primary" href="signup.html">Begin your journey <span>&#8599;</span></a>
+                    <a class="button button-quiet" href="login.html">Sign in <span>&#8594;</span></a>
+                </div>
                 <p class="signature-quote">Where every book leaves a trace.</p>
             </div>
             <div class="hero-art reveal" role="img" aria-label="A still life of a book and pressed leaves">
@@ -64,11 +70,14 @@
             </div>
         </section>
     </main>
-    <footer class="site-footer section-wrap"><a class="brand" href="index.html"><span
-                class="brand-mark">&#10022;</span>The Written Leaf</a>
+    <footer class="site-footer section-wrap">
+        <a class="brand" href="index.html"><span class="brand-mark">&#10022;</span>The Written Leaf</a>
         <p>A place for the books that stay.</p><span class="footer-meta">&copy; 2024 / Made for readers</span>
     </footer>
+    <script src="js/api.js"></script>
     <script src="js/script.js"></script>
 </body>
+
+</html>
 
 </html>

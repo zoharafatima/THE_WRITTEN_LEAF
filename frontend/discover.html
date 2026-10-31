@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Discover public reading reflections from The Written Leaf community.">
+    <title>Discover | The Written Leaf</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="progress-bar"></div>
+    <div id="app-navigation"></div>
+    <main>
+        <section class="discover-heading section-wrap">
+            <p class="eyebrow"><span></span> A shared reading shelf</p>
+            <h1>Find your next <em>favorite.</em></h1>
+            <p class="discover-intro">Books and reflections shared by the readers in our community.</p>
+        </section>
+        <section class="discover-content section-wrap">
+            <div class="discover-tools">
+                <label class="discover-search" for="discover-search">
+                    <span aria-hidden="true">&#9906;</span>
+                    <input id="discover-search" type="search" aria-label="Search books by title or author" placeholder="Search by title or author" autocomplete="off">
+                </label>
+                <label class="discover-available-filter" for="discover-available-only">
+                    <input id="discover-available-only" type="checkbox">
+                    <span>Available to borrow</span>
+                </label>
+                <p class="discover-result-count" id="discover-result-count" aria-live="polite"></p>
+            </div>
+            <div class="discover-grid" id="discover-grid" aria-live="polite" aria-busy="true">
+                <p class="discover-status">Loading public books...</p>
+            </div>
+            <div class="discover-more-wrap" id="discover-more-wrap" hidden>
+                <button class="button button-quiet" id="discover-load-more" type="button">Load more books</button>
+            </div>
+        </section>
+    </main>
+    <dialog class="discover-detail-dialog" id="discover-detail-dialog" aria-labelledby="discover-detail-title">
+        <button class="discover-dialog-close" type="button" aria-label="Close book details">&times;</button>
+        <article class="discover-detail">
+            <div class="discover-detail-covers">
+                <figure class="discover-detail-cover">
+                    <img id="discover-detail-front-image" alt="" hidden>
+                    <span id="discover-detail-front-fallback" aria-hidden="true">&#10047;</span>
+                    <figcaption>Front cover</figcaption>
+                </figure>
+                <figure class="discover-detail-cover" id="discover-detail-back-wrap" hidden>
+                    <img id="discover-detail-back-image" alt="" hidden>
+                    <span id="discover-detail-back-fallback" aria-hidden="true">&#10047;</span>
+                    <figcaption>Back cover</figcaption>
+                </figure>
+            </div>
+            <div class="discover-detail-copy">
+                <p class="eyebrow"><span></span> Shared by a reader</p>
+                <h2 id="discover-detail-title"></h2>
+                <p class="discover-detail-author" id="discover-detail-author"></p>
+                <a class="discover-reader-link" id="discover-detail-reader"></a>
+                <dl class="discover-detail-dates" id="discover-detail-dates" hidden>
+                    <div><dt>Started</dt><dd id="discover-detail-start"></dd></div>
+                    <div><dt>Finished</dt><dd id="discover-detail-end"></dd></div>
+                </dl>
+                <section class="discover-detail-reflection" id="discover-detail-reflection-wrap" hidden>
+                    <h3>Reading reflection</h3>
+                    <p id="discover-detail-reflection"></p>
+                </section>
+                <div class="discover-detail-actions">
+                    <button class="discover-like" id="discover-detail-like" type="button">
+                        <span aria-hidden="true">&#9829;</span><span class="like-count">0</span>
+                    </button>
+                    <button class="discover-borrow" id="discover-detail-borrow" type="button" hidden>Request to borrow</button>
+                    <a class="discover-borrow request-sent" id="discover-detail-request-link" href="lending.html" hidden>Request sent · View in Lending</a>
+                </div>
+                <p class="discover-action-status" id="discover-detail-status" role="status" aria-live="polite"></p>
+            </div>
+        </article>
+    </dialog>
+    <footer class="site-footer section-wrap">
+        <a class="brand" href="journey.html"><span class="brand-mark">&#10022;</span>The Written Leaf</a>
+        <p>A place for the books that stay.</p><span class="footer-meta">&copy; 2024 / Made for readers</span>
+    </footer>
+    <script src="js/api.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A book and reflection from your reading journey.">
+    <title>Book Detail | The Written Leaf</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="progress-bar"></div>
+    <div id="app-navigation"></div>
+    <main class="book-detail-main">
+        <section class="book-detail-content section-wrap">
+            <a class="book-detail-back" href="journey.html">&larr; Back to My Journey</a>
+            <p class="book-detail-status" id="book-detail-status" role="status" aria-live="polite">Gathering this page...</p>
+            <article class="book-detail" id="book-detail" hidden>
+                <div class="book-detail-cover-spread" id="book-detail-covers">
+                    <figure class="book-detail-cover book-detail-front">
+                        <img id="book-front-image" alt="" hidden>
+                        <span id="book-front-fallback" aria-hidden="true">&#10047;</span>
+                        <figcaption>Front cover</figcaption>
+                    </figure>
+                    <figure class="book-detail-cover book-detail-back" id="book-back-cover" hidden>
+                        <img id="book-back-image" alt="" hidden>
+                        <span id="book-back-fallback" aria-hidden="true">&#10047;</span>
+                        <figcaption>Back cover</figcaption>
+                    </figure>
+                </div>
+                <div class="book-detail-copy">
+                    <p class="eyebrow"><span></span> A page from your journey</p>
+                    <h1 id="book-detail-title"></h1>
+                    <p class="book-detail-author" id="book-detail-author"></p>
+                    <span class="entry-visibility" id="book-detail-visibility"></span>
+                    <dl class="book-detail-dates">
+                        <div><dt>Started</dt><dd id="book-detail-start"></dd></div>
+                        <div><dt>Finished</dt><dd id="book-detail-end"></dd></div>
+                        <div><dt>Reading status</dt><dd id="book-detail-reading-status"></dd></div>
+                        <div><dt>Lending</dt><dd id="book-detail-lending"></dd></div>
+                    </dl>
+                    <section class="book-detail-reflection">
+                        <h2>Reading reflection</h2>
+                        <p id="book-detail-reflection"></p>
+                    </section>
+                    <p class="book-detail-action-message" id="book-detail-action-message" role="status" aria-live="polite"></p>
+                    <div class="book-detail-actions">
+                        <button class="button button-primary" id="book-edit-button" type="button">Edit entry</button>
+                        <button class="book-delete-button" id="book-delete-button" type="button">Delete entry</button>
+                    </div>
+                </div>
+            </article>
+            <form class="book-detail-edit" id="book-detail-edit" hidden>
+                <p class="eyebrow"><span></span> Your reading notes</p>
+                <h1>Edit this <em>entry.</em></h1>
+                <div class="book-detail-edit-fields">
+                    <div class="field field-full">
+                        <label for="edit-title">Book title</label>
+                        <input id="edit-title" name="title" type="text" maxlength="255" required>
+                    </div>
+                    <div class="field field-full">
+                        <label for="edit-author">Author</label>
+                        <input id="edit-author" name="author" type="text" maxlength="255" required>
+                    </div>
+                    <div class="field">
+                        <label for="edit-start-date">Reading start date</label>
+                        <input id="edit-start-date" name="start_date" type="date">
+                    </div>
+                    <div class="field">
+                        <label for="edit-end-date">Reading end date</label>
+                        <input id="edit-end-date" name="end_date" type="date">
+                    </div>
+                    <p class="derived-reading-status" role="status" aria-live="polite">
+                        Reading status <strong id="edit-reading-status-preview">Currently Reading</strong>
+                    </p>
+                    <div class="field field-full">
+                        <label for="edit-reflection">Reading reflection</label>
+                        <textarea id="edit-reflection" name="reflection" rows="5"></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="edit-visibility">Visibility</label>
+                        <select id="edit-visibility" name="visibility">
+                            <option value="private">Private</option>
+                            <option value="public">Public</option>
+                        </select>
+                    </div>
+                    <label class="book-lending-option" for="edit-available-for-lending">
+                        <input id="edit-available-for-lending" name="available_for_lending" type="checkbox">
+                        <span>Available for lending</span>
+                        <small>Only public books can be offered to other readers.</small>
+                    </label>
+                    <fieldset class="cover-picker-group field-full">
+                        <legend>Book covers <span>Optional</span></legend>
+                        <p class="cover-picker-hint">Choose a new photo to replace a cover, or remove it.</p>
+                        <div class="cover-picker-grid">
+                            <div class="cover-picker" data-cover-picker data-cover-key="front_cover">
+                                <strong>Front cover</strong>
+                                <div class="cover-picker-preview">
+                                    <img alt="Front cover preview" hidden>
+                                    <span>No front cover selected</span>
+                                </div>
+                                <label class="cover-file-button">Choose image
+                                    <input class="cover-picker-input visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                                </label>
+                                <button class="cover-remove-button" type="button" disabled>Remove image</button>
+                                <p class="cover-picker-message" role="status" aria-live="polite"></p>
+                            </div>
+                            <div class="cover-picker" data-cover-picker data-cover-key="back_cover">
+                                <strong>Back cover</strong>
+                                <div class="cover-picker-preview">
+                                    <img alt="Back cover preview" hidden>
+                                    <span>No back cover selected</span>
+                                </div>
+                                <label class="cover-file-button">Choose image
+                                    <input class="cover-picker-input visually-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                                </label>
+                                <button class="cover-remove-button" type="button" disabled>Remove image</button>
+                                <p class="cover-picker-message" role="status" aria-live="polite"></p>
+                            </div>
+                        </div>
+                        <p class="cover-picker-hint">JPEG, PNG, GIF or WebP · up to 5 MB per image</p>
+                    </fieldset>
+                </div>
+                <p class="book-detail-action-message" id="book-detail-edit-message" role="status" aria-live="polite"></p>
+                <div class="book-detail-actions">
+                    <button class="button button-primary" type="submit">Save changes</button>
+                    <button class="button button-quiet" id="book-edit-cancel" type="button">Cancel</button>
+                </div>
+            </form>
+        </section>
+    </main>
+    <footer class="site-footer section-wrap">
+        <a class="brand" href="journey.html"><span class="brand-mark">&#10022;</span>The Written Leaf</a>
+        <p>A place for the books that stay.</p><span class="footer-meta">&copy; 2024 / Made for readers</span>
+    </footer>
+    <script src="js/api.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -14,7 +14,7 @@
     <div id="app-navigation"></div>
     <main class="book-detail-main">
         <section class="book-detail-content section-wrap">
-            <a class="book-detail-back" href="journey.html">&larr; Back to My Journey</a>
+            <a class="book-detail-back" id="book-detail-back" href="journey.html">&larr; Back to My Journey</a>
             <p class="book-detail-status" id="book-detail-status" role="status" aria-live="polite">Gathering this page...</p>
             <article class="book-detail" id="book-detail" hidden>
                 <div class="book-detail-cover-spread" id="book-detail-covers">
@@ -30,9 +30,10 @@
                     </figure>
                 </div>
                 <div class="book-detail-copy">
-                    <p class="eyebrow"><span></span> A page from your journey</p>
+                    <p class="eyebrow"><span></span> <span id="book-detail-origin">A page from your journey</span></p>
                     <h1 id="book-detail-title"></h1>
                     <p class="book-detail-author" id="book-detail-author"></p>
+                    <a class="book-detail-reader" id="book-detail-reader" hidden></a>
                     <span class="entry-visibility" id="book-detail-visibility"></span>
                     <dl class="book-detail-dates">
                         <div><dt>Started</dt><dd id="book-detail-start"></dd></div>

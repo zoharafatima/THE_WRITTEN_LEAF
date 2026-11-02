@@ -16,7 +16,7 @@
         <section class="discover-heading section-wrap">
             <p class="eyebrow"><span></span> A shared reading shelf</p>
             <h1>Find your next <em>favorite.</em></h1>
-            <p class="discover-intro">Books and reflections shared by the readers in our community.</p>
+            <p class="discover-intro">A shelf of books shared by readers like you.</p>
         </section>
         <section class="discover-content section-wrap">
             <div class="discover-tools">
@@ -33,8 +33,10 @@
             <div class="discover-grid" id="discover-grid" aria-live="polite" aria-busy="true">
                 <p class="discover-status">Loading public books...</p>
             </div>
-            <div class="discover-more-wrap" id="discover-more-wrap" hidden>
-                <button class="button button-quiet" id="discover-load-more" type="button">Load more books</button>
+            <div class="discover-pagination" id="discover-pagination" hidden>
+                <button class="button button-quiet" id="discover-previous" type="button">Previous</button>
+                <span id="discover-page-label" aria-live="polite">Page 1</span>
+                <button class="button button-quiet" id="discover-next" type="button">Next</button>
             </div>
         </section>
     </main>
@@ -68,7 +70,7 @@
                 </section>
                 <div class="discover-detail-actions">
                     <button class="discover-like" id="discover-detail-like" type="button">
-                        <span aria-hidden="true">&#9829;</span><span class="like-count">0</span>
+                    <span class="discover-heart" aria-hidden="true">&#9825;</span><span class="like-state">Like</span><span class="like-count">0</span>
                     </button>
                     <button class="discover-borrow" id="discover-detail-borrow" type="button" hidden>Request to borrow</button>
                     <a class="discover-borrow request-sent" id="discover-detail-request-link" href="lending.html" hidden>Request sent · View in Lending</a>

@@ -62,12 +62,18 @@
                 </div>
                 <div class="field">
                     <label for="password">Password</label>
-                    <input id="password" name="password" type="password" autocomplete="new-password" placeholder="At least 8 characters" minlength="8" aria-describedby="password-hint" required>
+                    <div class="password-input-wrap">
+                        <input id="password" name="password" type="password" autocomplete="new-password" placeholder="At least 8 characters" minlength="8" aria-describedby="password-hint" required>
+                        <button class="password-toggle" type="button" data-password-toggle aria-controls="password" aria-label="Show password" aria-pressed="false">Show</button>
+                    </div>
                     <span class="field-hint" id="password-hint">Use at least 8 characters.</span>
                 </div>
                 <div class="field">
                     <label for="confirm-password">Confirm Password</label>
-                    <input id="confirm-password" name="confirm-password" type="password" autocomplete="new-password" placeholder="Re-enter password" minlength="8" required>
+                    <div class="password-input-wrap">
+                        <input id="confirm-password" name="confirm-password" type="password" autocomplete="new-password" placeholder="Re-enter password" minlength="8" required>
+                        <button class="password-toggle" type="button" data-password-toggle aria-controls="confirm-password" aria-label="Show confirmation password" aria-pressed="false">Show</button>
+                    </div>
                 </div>
                 <button class="button button-primary" type="submit" id="signup-btn">Create account <span aria-hidden="true">&#8599;</span></button>
                 <p class="auth-note" aria-live="polite">Already have a place here? <a href="login.html">Log in</a></p>

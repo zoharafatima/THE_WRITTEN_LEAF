@@ -52,7 +52,10 @@
                 </div>
                 <div class="field">
                     <label for="password">Password</label>
-                    <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required>
+                    <div class="password-input-wrap">
+                        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required>
+                        <button class="password-toggle" type="button" data-password-toggle aria-controls="password" aria-label="Show password" aria-pressed="false">Show</button>
+                    </div>
                 </div>
                 <button class="button button-primary" type="submit" id="login-btn">Sign in <span aria-hidden="true">&#8594;</span></button>
                 <p class="auth-note" aria-live="polite">New to The Written Leaf? <a href="signup.html">Create an account</a></p>

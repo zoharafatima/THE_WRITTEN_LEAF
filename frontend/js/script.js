@@ -1,7 +1,7 @@
 // The Written Leaf — Client-Side Application Script
 
 // --- Helper & State Identification ---
-const PROTECTED_PAGES = ['journey.html', 'add-book.html', 'discover.html', 'profile.html', 'lending.html', 'reader.html'];
+const PROTECTED_PAGES = ['journey.html', 'add-book.html', 'discover.html', 'profile.html', 'lending.html', 'reader.html', 'book.html'];
 const PUBLIC_AUTH_PAGES = ['login.html', 'signup.html'];
 
 function getCurrentPage() {
@@ -24,6 +24,24 @@ function clearAuthError() {
         errorBanner.textContent = '';
         errorBanner.style.display = 'none';
     }
+}
+
+function bindPasswordVisibility(form) {
+    form.querySelectorAll('[data-password-toggle]').forEach(toggle => {
+        const input = document.getElementById(toggle.getAttribute('aria-controls'));
+        if (!input || !form.contains(input)) return;
+
+        toggle.addEventListener('click', () => {
+            const showPassword = input.type === 'password';
+            input.type = showPassword ? 'text' : 'password';
+            toggle.setAttribute('aria-pressed', String(showPassword));
+            toggle.setAttribute(
+                'aria-label',
+                `${showPassword ? 'Hide' : 'Show'} ${input.name === 'confirm-password' ? 'confirmation password' : 'password'}`
+            );
+            toggle.textContent = showPassword ? 'Hide' : 'Show';
+        });
+    });
 }
 
 // --- Dynamic Header Navigation ---
@@ -219,7 +237,7 @@ async function enforceAuth() {
     const user = await getMe();
 
     if (isProtected && !user) {
-        const nextPage = `${currentPage}${currentPage === 'reader.html' ? window.location.search : ''}`;
+        const nextPage = `${currentPage}${['reader.html', 'book.html'].includes(currentPage) ? window.location.search : ''}`;
         window.location.replace(`login.html?next=${encodeURIComponent(nextPage)}`);
         return null;
     }
@@ -246,7 +264,7 @@ window.addEventListener('pageshow', (event) => {
     if (PROTECTED_PAGES.includes(currentPage)) {
         getMe().then(user => {
             if (!user) {
-                const nextPage = `${currentPage}${currentPage === 'reader.html' ? window.location.search : ''}`;
+                const nextPage = `${currentPage}${['reader.html', 'book.html'].includes(currentPage) ? window.location.search : ''}`;
                 window.location.replace(`login.html?next=${encodeURIComponent(nextPage)}`);
             }
         });
@@ -287,6 +305,8 @@ if (progressBar) {
 // --- Login Form Handler ---
 const loginForm = document.getElementById('login-form');
 if (loginForm) {
+    bindPasswordVisibility(loginForm);
+    loginForm.addEventListener('input', clearAuthError);
     loginForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         clearAuthError();
@@ -334,6 +354,8 @@ if (loginForm) {
 // --- Sign-up Form Handler ---
 const signupForm = document.getElementById('signup-form');
 if (signupForm) {
+    bindPasswordVisibility(signupForm);
+    signupForm.addEventListener('input', clearAuthError);
     signupForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         clearAuthError();
@@ -504,10 +526,39 @@ if (bookForm) {
     const submitBtn = bookForm.querySelector('button[type="submit"]');
     const coverPickers = setupCoverPickers(bookForm);
     const createdEntryLink = document.getElementById('created-entry-link');
+    const startDateInput = document.getElementById('start-date');
+    const endDateInput = document.getElementById('end-date');
+    const visibilityInput = document.getElementById('visibility');
+    const lendingInput = document.getElementById('available-for-lending');
     bindReadingStatusPreview(
-        document.getElementById('end-date'),
+        endDateInput,
         document.getElementById('reading-status-preview')
     );
+
+    function validateReadingDates() {
+        const invalidRange = startDateInput.value && endDateInput.value
+            && endDateInput.value < startDateInput.value;
+        endDateInput.setCustomValidity(invalidRange ? 'End date cannot be before start date.' : '');
+        if (invalidRange) {
+            statusEl.textContent = 'End date cannot be before start date.';
+        } else if (statusEl.textContent === 'End date cannot be before start date.') {
+            statusEl.textContent = '';
+        }
+    }
+
+    function updateLendingAvailability() {
+        const isPrivate = visibilityInput.value === 'private';
+        lendingInput.disabled = isPrivate;
+        if (isPrivate) lendingInput.checked = false;
+    }
+
+    startDateInput.addEventListener('input', validateReadingDates);
+    startDateInput.addEventListener('change', validateReadingDates);
+    endDateInput.addEventListener('input', validateReadingDates);
+    endDateInput.addEventListener('change', validateReadingDates);
+    visibilityInput.addEventListener('change', updateLendingAvailability);
+    validateReadingDates();
+    updateLendingAvailability();
 
     bookForm.addEventListener('submit', async event => {
         event.preventDefault();
@@ -531,7 +582,7 @@ if (bookForm) {
                     ...coverValues
                 }
             });
-            statusEl.textContent = 'Your book has been saved to MySQL and added to your journey.';
+            statusEl.textContent = 'Your book has been saved and added to your journey.';
             createdEntryLink.href = `book.html?id=${encodeURIComponent(result.entry_id)}`;
             createdEntryLink.textContent = 'View this entry';
             createdEntryLink.hidden = false;
@@ -542,7 +593,13 @@ if (bookForm) {
                 return;
             }
             console.error('Add book error:', error);
-            statusEl.textContent = error.message || 'Could not save your entry. Please try again.';
+            if (error.message === 'Failed to fetch') {
+                statusEl.textContent = 'Could not connect to the server. Your book was not saved. Check your connection and try again.';
+            } else if (error.message === 'Request failed') {
+                statusEl.textContent = 'The server could not save your book. Please try again.';
+            } else {
+                statusEl.textContent = error.message || 'Could not save your book. Please try again.';
+            }
             submitBtn.disabled = false;
             submitBtn.textContent = 'Keep this entry';
         }
@@ -556,12 +613,15 @@ async function loadDiscoverBooks(user) {
     const searchInput = document.getElementById('discover-search');
     const availableInput = document.getElementById('discover-available-only');
     const resultCount = document.getElementById('discover-result-count');
-    const moreWrap = document.getElementById('discover-more-wrap');
-    const moreButton = document.getElementById('discover-load-more');
+    const pagination = document.getElementById('discover-pagination');
+    const previousButton = document.getElementById('discover-previous');
+    const nextButton = document.getElementById('discover-next');
+    const pageLabel = document.getElementById('discover-page-label');
     const dialog = document.getElementById('discover-detail-dialog');
     const booksById = new Map();
-    const pageSize = 50;
-    let offset = 0;
+    const pageSize = 12;
+    let page = 0;
+    let hasNextPage = false;
     let loadTimer;
     let loading = false;
     let requestSequence = 0;
@@ -598,6 +658,8 @@ async function loadDiscoverBooks(user) {
             button.setAttribute('aria-pressed', String(liked));
             button.setAttribute('aria-label', liked ? 'Unlike this book' : 'Like this book');
             button.classList.toggle('is-liked', liked);
+            button.querySelector('.discover-heart').textContent = liked ? '\u2665' : '\u2661';
+            button.querySelector('.like-state').textContent = liked ? 'Liked' : 'Like';
             button.querySelector('.like-count').textContent = String(book.like_count);
         });
         const detailLike = document.getElementById('discover-detail-like');
@@ -605,6 +667,8 @@ async function loadDiscoverBooks(user) {
             detailLike.setAttribute('aria-pressed', String(liked));
             detailLike.setAttribute('aria-label', liked ? 'Unlike this book' : 'Like this book');
             detailLike.classList.toggle('is-liked', liked);
+            detailLike.querySelector('.discover-heart').textContent = liked ? '\u2665' : '\u2661';
+            detailLike.querySelector('.like-state').textContent = liked ? 'Liked' : 'Like';
             detailLike.querySelector('.like-count').textContent = String(book.like_count);
         }
     }
@@ -617,9 +681,8 @@ async function loadDiscoverBooks(user) {
 
         const open = document.createElement('a');
         open.className = 'discover-card-open';
-        open.href = `#book-${encodeURIComponent(book.entry_id)}`;
-        open.dataset.discoverAction = 'detail';
-        open.dataset.entryId = String(book.entry_id);
+        open.href = `book.html?id=${encodeURIComponent(book.entry_id)}`;
+        open.setAttribute('aria-label', `View ${book.title || 'book'} details`);
 
         const cover = document.createElement('div');
         cover.className = 'discover-cover has-fallback';
@@ -631,22 +694,20 @@ async function loadDiscoverBooks(user) {
         const fallback = document.createElement('span');
         fallback.className = 'discover-cover-fallback';
         setCover(image, fallback, book.front_cover, book.title);
+        fallback.textContent = '\u2767';
         cover.append(image, fallback);
 
         const details = document.createElement('div');
         details.className = 'discover-card-details';
         const title = document.createElement('h2');
         title.textContent = book.title || 'Untitled book';
-        const author = document.createElement('p');
-        author.className = 'discover-author';
-        author.textContent = book.author || 'Unknown author';
-        details.append(title, author);
+        details.append(title);
         open.append(cover, details);
 
         const reader = document.createElement('a');
         reader.className = 'discover-reader';
         reader.href = `reader.html?username=${encodeURIComponent(book.username || '')}`;
-        reader.textContent = `@${book.username || 'reader'} · Reader ID ${book.user_id}`;
+        reader.textContent = `@${book.username || 'reader'}`;
 
         const actions = document.createElement('div');
         actions.className = 'discover-card-actions';
@@ -657,16 +718,16 @@ async function loadDiscoverBooks(user) {
         likeButton.dataset.entryId = String(book.entry_id);
         likeButton.setAttribute('aria-pressed', String(Boolean(book.liked_by_me)));
         likeButton.setAttribute('aria-label', book.liked_by_me ? 'Unlike this book' : 'Like this book');
-        likeButton.innerHTML = '<span aria-hidden="true">&#9829;</span><span class="like-count"></span>';
+        likeButton.innerHTML = `<span class="discover-heart" aria-hidden="true">${book.liked_by_me ? '&#9829;' : '&#9825;'}</span><span class="like-state">${book.liked_by_me ? 'Liked' : 'Like'}</span><span class="like-count"></span>`;
         likeButton.querySelector('.like-count').textContent = String(Number(book.like_count) || 0);
         actions.appendChild(likeButton);
 
         if (book.available_for_lending && Number(book.user_id) !== Number(user.user_id)) {
-            if (book.borrow_requested) {
+            if (book.request_status) {
                 const requestLink = document.createElement('a');
                 requestLink.className = 'discover-borrow request-sent';
                 requestLink.href = 'lending.html';
-                requestLink.textContent = 'Request sent · View in Lending';
+                requestLink.textContent = `Request ${book.request_status} · View in Lending`;
                 actions.appendChild(requestLink);
             } else {
                 const borrowButton = document.createElement('button');
@@ -678,6 +739,14 @@ async function loadDiscoverBooks(user) {
                 actions.appendChild(borrowButton);
             }
         }
+
+        const quickViewButton = document.createElement('button');
+        quickViewButton.className = 'discover-quick-view';
+        quickViewButton.type = 'button';
+        quickViewButton.dataset.discoverAction = 'detail';
+        quickViewButton.dataset.entryId = String(book.entry_id);
+        quickViewButton.textContent = 'Quick view';
+        actions.appendChild(quickViewButton);
 
         const status = document.createElement('p');
         status.className = 'discover-action-status';
@@ -693,7 +762,7 @@ async function loadDiscoverBooks(user) {
         document.getElementById('discover-detail-author').textContent = book.author || 'Unknown author';
         const readerLink = document.getElementById('discover-detail-reader');
         readerLink.href = `reader.html?username=${encodeURIComponent(book.username || '')}`;
-        readerLink.textContent = `@${book.username || 'reader'} · Reader ID ${book.user_id}`;
+        readerLink.textContent = `@${book.username || 'reader'}`;
         setCover(
             document.getElementById('discover-detail-front-image'),
             document.getElementById('discover-detail-front-fallback'),
@@ -725,34 +794,41 @@ async function loadDiscoverBooks(user) {
         const borrowButton = document.getElementById('discover-detail-borrow');
         borrowButton.dataset.discoverAction = 'borrow';
         borrowButton.dataset.entryId = String(book.entry_id);
-        borrowButton.hidden = !book.available_for_lending || Number(book.user_id) === Number(user.user_id);
-        document.getElementById('discover-detail-request-link').hidden = !book.borrow_requested;
-        document.getElementById('discover-detail-status').textContent = '';
+        borrowButton.hidden = !book.available_for_lending
+            || Number(book.user_id) === Number(user.user_id)
+            || Boolean(book.request_status);
+        const requestLink = document.getElementById('discover-detail-request-link');
+        requestLink.hidden = !book.request_status;
+        if (book.request_status) {
+            requestLink.textContent = `Request ${book.request_status} · View in Lending`;
+        }
+        document.getElementById('discover-detail-status').textContent = book.request_status
+            ? `Your request status is ${book.request_status}.`
+            : '';
         syncLikes(book);
         dialog.showModal();
     }
 
-    async function loadBooks(reset = true) {
-        if (!reset && loading) return;
+    async function loadBooks(targetPage = 0) {
+        if (targetPage !== 0 && loading) return;
         const currentRequest = ++requestSequence;
         loading = true;
-        moreButton.disabled = true;
+        page = targetPage;
+        previousButton.disabled = true;
+        nextButton.disabled = true;
         track.setAttribute('aria-busy', 'true');
-        if (reset) {
-            offset = 0;
-            booksById.clear();
-            track.replaceChildren();
-            resultCount.textContent = '';
-            moreWrap.hidden = true;
-            const loadingMessage = document.createElement('p');
-            loadingMessage.className = 'discover-status';
-            loadingMessage.textContent = 'Gathering books for the shelf...';
-            track.appendChild(loadingMessage);
-        }
+        booksById.clear();
+        track.replaceChildren();
+        resultCount.textContent = '';
+        pagination.hidden = true;
+        const loadingMessage = document.createElement('p');
+        loadingMessage.className = 'discover-status';
+        loadingMessage.textContent = 'Gathering books for the shelf...';
+        track.appendChild(loadingMessage);
 
         const params = new URLSearchParams({
             limit: String(pageSize),
-            offset: String(offset),
+            offset: String(page * pageSize),
             q: searchInput.value.trim()
         });
         if (availableInput.checked) params.set('available', '1');
@@ -761,14 +837,13 @@ async function loadDiscoverBooks(user) {
             const books = await api(`/api/discover?${params}`);
             if (currentRequest !== requestSequence) return;
             if (!Array.isArray(books)) throw new Error('The server returned an unexpected book list.');
-            if (reset) track.replaceChildren();
+            track.replaceChildren();
             books.forEach(book => {
-                book.borrow_requested = Boolean(book.requested_by_me);
+                book.request_status = book.request_status || null;
                 renderCard(book);
             });
-            offset += books.length;
             const visibleCount = track.querySelectorAll('.discover-card').length;
-            resultCount.textContent = `${visibleCount} ${visibleCount === 1 ? 'book' : 'books'} on the shelf`;
+            resultCount.textContent = `${visibleCount} ${visibleCount === 1 ? 'book' : 'books'} on this page`;
             if (visibleCount === 0) {
                 const empty = document.createElement('p');
                 empty.className = 'discover-status';
@@ -777,7 +852,11 @@ async function loadDiscoverBooks(user) {
                     : 'No public books to discover yet. Check back as readers share their shelves.';
                 track.appendChild(empty);
             }
-            moreWrap.hidden = books.length < pageSize;
+            hasNextPage = books.length === pageSize;
+            previousButton.disabled = page === 0;
+            nextButton.disabled = !hasNextPage;
+            pageLabel.textContent = `Page ${page + 1}`;
+            pagination.hidden = page === 0 && !hasNextPage;
         } catch (error) {
             if (currentRequest !== requestSequence) return;
             console.error('Discover error:', error);
@@ -789,11 +868,11 @@ async function loadDiscoverBooks(user) {
                 message.className = 'discover-status discover-error';
                 message.textContent = 'Could not load books. Please check the server and try again.';
                 track.appendChild(message);
+                pagination.hidden = true;
             }
         } finally {
             if (currentRequest === requestSequence) {
                 loading = false;
-                moreButton.disabled = false;
                 track.setAttribute('aria-busy', 'false');
             }
         }
@@ -830,15 +909,20 @@ async function loadDiscoverBooks(user) {
                 target.classList.add('like-feedback');
                 window.setTimeout(() => target.classList.remove('like-feedback'), 450);
             } else if (action === 'borrow') {
-                await api('/api/lending', {
+                const result = await api('/api/lending', {
                     method: 'POST',
                     body: { entry_id: Number(book.entry_id) }
                 });
-                book.borrow_requested = true;
+                if (!['pending', 'accepted'].includes(result.status)) {
+                    throw new Error('The server returned an unexpected lending request status.');
+                }
+                book.request_status = result.status;
                 if (card) renderCardReplacement(card, book);
                 document.getElementById('discover-detail-borrow').hidden = true;
-                document.getElementById('discover-detail-request-link').hidden = false;
-                if (status) status.textContent = 'Your request was sent.';
+                const requestLink = document.getElementById('discover-detail-request-link');
+                requestLink.textContent = `Request ${book.request_status} · View in Lending`;
+                requestLink.hidden = false;
+                if (status) status.textContent = `Your request was sent. Status: ${book.request_status}.`;
             }
         } catch (error) {
             if (error.status === 401) {
@@ -859,7 +943,7 @@ async function loadDiscoverBooks(user) {
         const replacement = document.createElement('a');
         replacement.className = 'discover-borrow request-sent';
         replacement.href = 'lending.html';
-        replacement.textContent = 'Request sent · View in Lending';
+        replacement.textContent = `Request ${book.request_status} · View in Lending`;
         card.querySelector('[data-discover-action="borrow"]')?.replaceWith(replacement);
     }
 
@@ -867,7 +951,8 @@ async function loadDiscoverBooks(user) {
     dialog.addEventListener('click', event => {
         if (event.target === dialog) dialog.close();
     });
-    moreButton.addEventListener('click', () => loadBooks(false));
+    previousButton.addEventListener('click', () => loadBooks(page - 1));
+    nextButton.addEventListener('click', () => loadBooks(page + 1));
     searchInput.addEventListener('input', () => {
         window.clearTimeout(loadTimer);
         loadTimer = window.setTimeout(() => loadBooks(), 250);
@@ -1471,7 +1556,7 @@ function formatBookDate(value) {
         : new Intl.DateTimeFormat(undefined, { year: 'numeric', month: 'long', day: 'numeric' }).format(dateValue);
 }
 
-async function loadBookDetail() {
+async function loadBookDetail(user) {
     const detail = document.getElementById('book-detail');
     if (!detail) return;
 
@@ -1516,9 +1601,21 @@ async function loadBookDetail() {
     }
 
     function renderBook() {
+        const isOwner = Number(book.user_id) === Number(user.user_id);
         detail.hidden = false;
         editForm.hidden = true;
         document.title = `${book.title} | The Written Leaf`;
+        const backLink = document.getElementById('book-detail-back');
+        backLink.href = isOwner ? 'journey.html' : 'discover.html';
+        backLink.textContent = isOwner ? 'Back to My Journey' : 'Back to Discover';
+        document.getElementById('book-detail-origin').textContent =
+            isOwner ? 'A page from your journey' : 'A book shared by a reader';
+        const readerLink = document.getElementById('book-detail-reader');
+        readerLink.href = `reader.html?username=${encodeURIComponent(book.username || '')}`;
+        readerLink.textContent = `@${book.username || 'reader'}`;
+        readerLink.hidden = !book.username;
+        document.getElementById('book-edit-button').hidden = !isOwner;
+        document.getElementById('book-delete-button').hidden = !isOwner;
         document.getElementById('book-detail-title').textContent = book.title;
         document.getElementById('book-detail-author').textContent = book.author;
         document.getElementById('book-detail-start').textContent = formatBookDate(book.start_date);
@@ -1572,7 +1669,8 @@ async function loadBookDetail() {
             window.location.assign('journey.html');
         } catch (error) {
             if (error.status === 401) {
-                window.location.assign('login.html?next=book.html');
+                const nextPage = `book.html?id=${entryId}`;
+                window.location.assign(`login.html?next=${encodeURIComponent(nextPage)}`);
                 return;
             }
             console.error('Book delete error:', error);
@@ -1603,7 +1701,8 @@ async function loadBookDetail() {
             renderBook();
         } catch (error) {
             if (error.status === 401) {
-                window.location.assign('login.html?next=book.html');
+                const nextPage = `book.html?id=${entryId}`;
+                window.location.assign(`login.html?next=${encodeURIComponent(nextPage)}`);
                 return;
             }
             console.error('Book update error:', error);
@@ -1635,7 +1734,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loadDiscoverBooks(user);
             loadReaderProfile();
             loadJourneyBooks();
-            loadBookDetail();
+            loadBookDetail(user);
             setupProfileEditor(user);
             loadProfileBooks();
             if (document.getElementById('owned-lending-books')) {
